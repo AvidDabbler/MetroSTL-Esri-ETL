@@ -11,3 +11,4 @@ MetaData.docx
 debug.log
 .env
 /__pycache__
+/.idea
