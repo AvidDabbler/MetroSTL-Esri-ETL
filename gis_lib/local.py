@@ -1,30 +1,37 @@
 import os
 import arcpy as ap
+import csv
+from .helpers import deleteFolder
 
 def csv_locs(date):
-    return [
+    csvs = [
         {'org_csv': f'METROBUS-STOPBYLINE_EXTRACTION-WITH-DISTANCE{date}.csv', 
-        # 'table': stopsbyline_table, 
+        'type': 'stopsbyline', 
         'columns': ['Seq', 'SignID', 'StopID', 'StopAbbr', 'StopName', 'OnSt', 'AtSt', 'StopPos', 'PrefTrans', 'Bench', 'Shelter', 'Transfer', 'ADA', 'PubWay', 'Node', 'LineName', 'RouteCode', 'Dir', 'CountyCode', 'Juris', 'GPS_Lon', 'GPS_Lat', 'Dist', '']},
-        {'org_csv': f'METROBUS-STOP-EXTRACTION{date}', 
-        # 'table': stops_table, 
+        {'org_csv': f'METROBUS-STOP-EXTRACTION{date}.csv', 
+        'type': 'stops', 
         'columns': ['SignID', 'StopID', 'StopAbbr', 'StopName', 'OnSt', 'AtSt', 'Lines', 'Routes', 'StopPos', 'PrefTrans', 'Bench', 'Shelter', 'Transfer', 'ADA', 'PubWay', 'CountyCode', 'Juris','GPS_Lon', 'GPS_Lat', '']},
-        {'org_csv': f'METRO_PATTERNS{date}', 
-        # 'table': patterns_table, 
+        {'org_csv': f'METRO_PATTERNS{date}.csv', 
+        'type': 'patterns', 
         'columns': ['SignID', 'ShapeID', 'RouteAbbr', 'DirName', 'LineName','PubNum', 'LineNum', 'shape_lat', 'shape_lon', 'shape_pt_sequence', '']},
         {'org_csv': f"ADA-ROUTES-LIST.csv", 
-        # 'table': ada_table, 
+        'type': 'ada', 
         'columns': ['type', 'ADAAbbr', '']},
-        {'org_csv': f'METROBUS-GHOSTSTOPS{date}', 
-        # 'table': ghoststops_table, 
+        {'org_csv': f'METROBUS-GHOSTSTOPS{date}.csv', 
+        'type': 'ghoststops', 
         'columns': ['SignID','StopID','StopAbbr','StopName','OnSt','AtSt','StopPos','PrefTrans','Bench','Shelter','Transfer','ADA','PubWay','CountyCode','Juris','GPS_Lon','GPS_Lat','']}
         ]
-        # will be outdated after AirFlow. Updated SQL Scripts 
-        # will allow for us to use specified column headers
+       
+    new_csvs = []
 
-def add_columns(sql_exports, spec, folder_name):
+    for item in csvs:    
+        if os.path.exists(os.path.join(os.environ['SQL_EXPORTS']), item['org_csv']):
+            new_csvs.append(item)
+    return new_csvs
+
+def add_columns(sql_exports, csvs, folder_name):
     # add in missing columns from
-    for item in spec:
+    for item in csvs:
         org_csv_loc = os.path.join(sql_exports, item['org_csv'])
         new_csv_loc = os.path.join(sql_exports, rf'{folder_name}\{item["org_csv"]}')
 
@@ -40,19 +47,21 @@ def add_columns(sql_exports, spec, folder_name):
                 all_rows.append(row)
 
         # Do not modify original file - we will make a copy:
-        deleteFeatureClass(item['org_csv'], sql_exports)
+        # deleteFeatureClass(item['org_csv'], sql_exports)
 
         with open(new_csv_loc, 'w', newline='') as f:
             # Overwrite the old file with the modified rows
             writer = csv.writer(f)
             writer.writerows(all_rows)
+
     # returns the full path of the new csv directory
     return {"org_dir": sql_exports, "processed_dir": os.path.join(sql_exports, folder_name)}
 
 def update_current(config):
     
     ap.env.overwriteOutput = True
-    for item in config.updateList:
+
+    for item in config['updateList']:
         print('********************************************************************************************************')
         print(f'Start of {item} creation in CurrentFiles.gdb')
         print('********************************************************************************************************')

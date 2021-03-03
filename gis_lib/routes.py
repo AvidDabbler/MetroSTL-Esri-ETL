@@ -3,24 +3,24 @@ import arcpy as ap
 import pandas as pd
 
 # helpers
-from .helpers import * 
+from .helpers import deleteFeatureClass
 
 
 def routesCreation(config):
     ap.env.overwriteOutput = True
 
-    csv_dir = config.processed_dir
-    ds_gdb = config.ds_gdb
+    csv_dir = config['processed_dir']
+    ds_gdb = config['ds_gdb']
     
     # CSV TABLES
-    patterns_xy = config.files.patterns.xy
-    patterns_name = config.files.patterns.name
-    patterns_line = config.files.patterns.line
-    ada_table = config.files.ada
+    patterns_xy = config['files']['patterns'].xy
+    patterns_name = config['files']['patterns'].name
+    patterns_line = config['files']['patterns'].line
+    ada_table = config['files']['ada']
 
     # FEATURE CLASS NAMES
-    routes_dir_line = config.files.feat_classes.routes_dir
-    routes_line = config.files.feat_classes.routes
+    routes_dir_line = config['files']['feat_classes']['routes_dir']
+    routes_line = config['files']['feat_classes']['routes']
 
     # CSV LOCATIONS
     patterns_line_loc = os.path.join(ds_gdb, patterns_line)
@@ -28,13 +28,13 @@ def routesCreation(config):
 
 
     # delete patterns if it has already been run today
-    # deleteFeatureClass(patterns_xy, ds_gdb)
+    deleteFeatureClass(patterns_xy, ds_gdb)
     # TURN CSV TO POINTS FEATURE CLASS
     ap.management.XYTableToPoint(patterns_table, patterns_xy, "shape_lon", "shape_lat", "", ap.SpatialReference(4326))
     print("Created Points file from CSV file")
 
     # CHECK FOR FILE AND DELETE IF IT EXISTS
-    # deleteFeatureClass(patterns_line, ds_gdb)
+    deleteFeatureClass(patterns_line, ds_gdb)
     ap.PointsToLine_management(patterns_xy,
                                patterns_line,
                                'ShapeID',
@@ -77,7 +77,7 @@ def routesCreation(config):
 
     # ROUTES BY DIRECTION CREATION
 
-    # deleteFeatureClass(routes_dir_line, ds_gdb)
+    deleteFeatureClass(routes_dir_line, ds_gdb)
 
     # CREATE ROUTE DIR SHAPEFILE
     ap.Dissolve_management(patterns_line, routes_dir_line, ['ROUTEABBR', 'LINENAME', 'PUBNUM', 'LINENUM', 'DIRNAME', 'ADA'])
@@ -85,7 +85,7 @@ def routesCreation(config):
 
     # ROUTES CREATION
 
-    # deleteFeatureClass(routes_line, ds_gdb)
+    deleteFeatureClass(routes_line, ds_gdb)
 
     # CREATE ROUTE SHAPEFILE
     ap.Dissolve_management(patterns_line, routes_line, ['ROUTEABBR', 'LINENAME', 'PUBNUM', 'LINENUM', 'ADA'])
@@ -98,23 +98,23 @@ def routesCreation(config):
 def routeBuffers(config):
     ap.env.overwriteOutput = True
 
-    date = config.date
-    sign = config.sign
-    acs_year = config.acs_year
-    title_vi_gdb = config.title_vi_gdb
+    date = config['date']
+    sign = config['sign']
+    acs_year = config['acs_year']
+    title_vi_gdb = config['title_vi_gdb']
 
-    csv_dir = config.processed_dir
-    ds_gdb = config.ds_gdb
+    csv_dir = config['processed_dir']
+    ds_gdb = config['ds_gdb']
     
     # CSV TABLES
-    patterns_name = config.files.patterns.name
+    patterns_name = config['files']['patterns']['name']
     patterns_table = os.path.join(csv_dir, f'{patterns_name}.csv')
 
     # FEATURE CLASS NAMES
-    routes_dir_line = config.files.feat_classes.routes_dir
-    routes_line = config.files.feat_classes.routes
-    route_buffer = config.feat_classes.route_buffer
-    sys_buffer = config.feat_classes.sys_buffer
+    routes_dir_line = config['files']['feat_classes']['routes_dir']
+    routes_line = config['files']['feat_classes']['routes']
+    route_buffer = config['feat_classes']['route_buffer']
+    sys_buffer = config['feat_classes']['sys_buffer']
 
     # MetroBusRoutes_Buffer and MetroBusSystem_Buffer
     buffer_list = [{'dist': '0.75 miles', 'name': '075'},
@@ -129,7 +129,7 @@ def routeBuffers(config):
         routes_buffer_loc = os.path.join(ds_gdb, routes_buffer)
 
         # DELETE DUPLICATE ROUTE FILE
-        deleteFeatureClass(routes_buffer, ds_gdb)
+        # deleteFeatureClass(routes_buffer, ds_gdb)
 
         ap.Buffer_analysis(routes_line, routes_buffer,
                            dist['dist'], "FULL", "ROUND", "NONE")
@@ -177,7 +177,7 @@ def routeBuffers(config):
             print('')
 
             # DELETE DUPLICATE ROUTE DIRECTION FILE
-            deleteFeatureClass(acs_out, title_vi_gdb)
+            # deleteFeatureClass(acs_out, title_vi_gdb)
 
             ap.Clip_analysis(acs_in, mb_sys_buffer, acs_out)
             ap.AddFields_management(acs_out,

@@ -2,7 +2,7 @@ import os
 import arcpy as ap
 import glob
 
-from gis_lib import *
+from gis_lib.helpers import * 
 
 
 # TODO: specify portal ids for feature classes
@@ -18,18 +18,18 @@ def local_config():
         return date
 
     sched_date = local_date('METRO_PATTERNS*')
-    Automation_Exports = os.getenv('AUTOMATION_EXPORTS')
-    Sql_Exports = os.getenv('SQL_Exports')
+    Automation_Exports = os.environ['AUTOMATION_EXPORTS']
+    Sql_Exports = os.environ['SQL_Exports']
 
     return {
-        "ACS_Year": os.getenv('TITLE_VI_GDB')[-6:-4],
+        "ACS_Year": os.environ['TITLE_VI_GDB'][-6:-4],
         "Automation_Exports": Automation_Exports,
         "cf_gdb": os.path.join(Automation_Exports, "CurrentFiles.gdb"),
         "ds_gdb": os.path.join(Automation_Exports, f"DataStore_{sched_date}.gdb"),
         "sched_date": sched_date,
         "sign": current_sign(os.path.join(Sql_Exports, f'METROBUS-STOP-EXTRACTION{sched_date}.csv')),
         "Sql_Exports": Sql_Exports,
-        "TitleVI": os.getenv('TITLE_VI_GDB'),
+        "TitleVI": os.environ['TITLE_VI_GDB'],
     }
 
 def portal_config(fc_list, portal):
@@ -37,37 +37,37 @@ def portal_config(fc_list, portal):
 
     for fc in fc_list:
         if fc[portal] is True:
-            list.append(fc)
+            features.append(fc)
             print(f"- {fc['title']}")
 
     if portal == 'agol':
         profile = {
             "portal": 'https://www.arcgis.com/',
-            "user": os.getenv('AGOL_USER'),
-            "password": os.getenv('AGOL_PASSWORD'),
-            "project": os.getenv('AGOL_PROJECT'),
+            "user": os.environ['AGOL_USER'],
+            "password": os.environ['AGOL_PASSWORD'],
+            "project": os.environ['AGOL_PROJECT'],
         }
     elif portal == 'enterprise':
         profile = {
-            "portal": os.getenv('ENTERP_PORTAL'),
-            "user": os.getenv('ENTERP_USER'),
-            "password": os.getenv('ENTERP_PASSWORD'),
-            "project": os.getenv('ENTERP_PROJECT'),
+            "portal": os.environ['ENTERP_PORTAL'],
+            "user": os.environ['ENTERP_USER'],
+            "password": os.environ['ENTERP_PASSWORD'],
+            "project": os.environ['ENTERP_PROJECT'],
         }
     else:
-        print(f"{portal} is not a valid pole")
+        print(f"{portal} is not a valid portal")
     profile["features"] = features
     return profile
 
 def config_options(files, csv_dir, local):
     ap.env.workspace = os.path.join(local.Automation_Exports, local.ds_gdb)
     # csvs, csv_dir, local.sign, local.sched_date, local.ACS_Year, local.ds_gdb, local.cf_gdb
-    sign = local.sign
-    date = local.sched_date
-    acs_year = local.ACS_Year
-    ds_gdb = local.ds_gdb
-    cf_gdb = local.cf_gdb
-    title_vi_gdb = local.TitleVI
+    sign = local['sign']
+    date = local['sched_date']
+    acs_year = local['ACS_Year']
+    ds_gdb = local['ds_gdb']
+    cf_gdb = local['cf_gdb']
+    title_vi_gdb = local['TitleVI']
 
     return {
         "sign": sign,

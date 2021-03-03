@@ -10,8 +10,7 @@ from dotenv import load_dotenv
 def get_env():
     dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
     load_dotenv(dotenv_path)
-
-
+    return os.environ.items()
 
 def date(text):
     for file in glob.glob(text):

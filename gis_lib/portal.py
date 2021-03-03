@@ -2,6 +2,9 @@ import os
 import arcpy as ap
 from arcgis.gis import GIS
 
+from .helpers import deleteFolder
+
+
 # TODO: Refactor by cutting out project variables and specifically define portal item id's
 
 def updatePortalLayers(portal):
@@ -19,11 +22,11 @@ def updatePortalLayers(portal):
     # THE FOLLOWING LIST IS THE EXISTING FILES THAT ARE CURRENTLY HOSTED VIA AGOL AND IF YOU ARE GOING TO UPDATE THE
     # THE LIST OF FILES TO ADD MORE YOU NEED TO CREATE A NEW MAP WITH A CORRESPONDING FILE IN AUTOMATEDEXPORTS/CURRENTFILE.GDB
 
-    url = portal.url
-    project = portal.project
-    password = portal.password
-    user = portal.user
-    features = portal.features
+    url = portal['url']
+    project = portal['project']
+    password = portal['password']
+    user = portal['user']
+    features = portal['features']
 
     folder = 'REGISTERED_SERVICES'
 
@@ -44,7 +47,6 @@ def updatePortalLayers(portal):
     print(' ')
 
     # End setting variables
-
     for fc in features:
         # Local paths to create temporary content
         print(f"Start of: {fc['title']}")

@@ -3,24 +3,23 @@ import arcpy as ap
 import pandas as pd
 
 # helpers
-from .helpers import * 
+from .helpers import deleteFeatureClass
 
 
 
 def eamStopCreation(config):
     ap.env.overwriteOutput = True
 
-    cf_gdb = config.cf_gdb
- 
+    cf_gdb = config['cf_gdb'] 
     # FEATURE CLASS NAMES
-    bus_stops = config.registered.stops
-    eam_stops = config.registered.eam_stops
-    eam_stops_1000 = config.registered.eam_stops_1000
-    grid1000 = config.registered.grid1000
-    grid10000 = config.registered.grid10000
+    bus_stops = config['registered']['stops']
+    eam_stops = config['registered']['eam_stops']
+    eam_stops_1000 = config['registered']['eam_stops_1000']
+    grid1000 = config['registered']['grid1000']
+    grid10000 = config['registered']['grid10000']
 
-    # deleteFeatureClass('EAMMetroBusStops_REGISTERED', 'A:\Open Data Admin\AutomationExports\CurrentFiles.gdb')
-    # deleteFeatureClass('EAMMetroBusStops_1000', 'A:\Open Data Admin\AutomationExports\CurrentFiles.gdb')
+    deleteFeatureClass('EAMMetroBusStops_REGISTERED', 'A:\Open Data Admin\AutomationExports\CurrentFiles.gdb')
+    deleteFeatureClass('EAMMetroBusStops_1000', 'A:\Open Data Admin\AutomationExports\CurrentFiles.gdb')
 
     ap.analysis.SpatialJoin(
         os.path.join(cf_gdb, bus_stops),

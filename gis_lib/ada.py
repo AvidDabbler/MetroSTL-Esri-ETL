@@ -1,12 +1,15 @@
 import os
 import arcpy as ap
 
+from .helpers import deleteFolder, deleteFeatureClass
+
+
 def adaCreation(config):
-    sign = config.sign
-    date = config.date
-    cf_gdb = config.cf_gdb
-    ds_gdb = config.ds_gdb
-    lightrail_buffer = config.registered.lightrail_buffer
+    sign = config['sign']
+    date = config['date']
+    cf_gdb = config['cf_gdb']
+    ds_gdb = config['ds_gdb']
+    lightrail_buffer = config['registered']['lightrail_buffer']
 
     print('start of ada creation')
     # sign = s
@@ -23,9 +26,9 @@ def adaCreation(config):
 
     ap.env.overwriteOutput = True
 
-    # deleteFeatureClass(ada_service_area, ds_gdb)
-    # deleteFeatureClass(ada_system_merge, ds_gdb)
-    # deleteFeatureClass(ada_route_buffer, ds_gdb)
+    deleteFeatureClass(ada_service_area, ds_gdb)
+    deleteFeatureClass(ada_system_merge, ds_gdb)
+    deleteFeatureClass(ada_route_buffer, ds_gdb)
 
     # MERGE METROBUS SYSTEM BUFFER WITH LIGHTRAIL ALIGNMENT BUFFER AND 270 FILL IN
     ap.FeatureClassToFeatureClass_conversion(mb_sys_buffer_loc, ds_gdb, ada_route_buffer, 'ADA = 1')
@@ -35,5 +38,5 @@ def adaCreation(config):
 
     # DISSOLVE MERGED LAYERS INTO MetroADAServiceArea
     ap.Dissolve_management(ada_system_merge, ada_service_area, "Name")
-    # deleteFeatureClass(ada_system_merge, ds_gdb)
+    deleteFeatureClass(ada_system_merge, ds_gdb)
     print('end of ada creation')

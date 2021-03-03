@@ -2,6 +2,7 @@ import os
 import csv
 import arcpy as ap
 from arcgis.gis import GIS
+from dotenv import load_dotenv
 
 ##### CONFIG #####
 from config import local_config, portal_config, config_options
@@ -22,63 +23,65 @@ from features import features
  
 
 # TODO: add in portal ids for feature classes on each portal and cut out project specific bloat
+# TODO: update date to be that monday's date to avoid confusion
 
 def run():
     # GET THE LOCAL PROJECT ENV VARIABLES
-    get_env()
-    # Function chaining all of the processing of feature classes into one 
-    # function that finishes by updating the current gdb
-    def createLocalFiles(config):
-        routesCreation(config)
-        routeBuffers(config)
-        stopsCreation(config)
-        eamStopCreation(config)
-        ghosttopsCreation(config)
-        adaCreation(config)
-        update_current(config)
-
+    dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+    load_dotenv(dotenv_path)    # Function chaining all of the processing of feature classes into one 
+    
     #  change cwd
-    # os.chdir(os.getenv('SQL_EXPORTS'))
+    os.chdir(os.environ['SQL_EXPORTS'])
 
     # turn local variables into object
     local = local_config()
-
-    ap.env.workspace = os.path.join(local.AutomationExports, local.ds_gdb)
+    ap.env.workspace = os.path.join(local['Automation_Exports'], local['ds_gdb'])
     
     # get feature class names by feeding in date
-    feature_classes = features(local.sched_date)
+    feature_classes = features(local['sched_date'])
 
     # build agol and enterprise profiles
     agol_config = portal_config(feature_classes, 'agol')
     enterprise_config = portal_config(feature_classes, 'enterprise')
     
     # get the location of all of the csv's ---> to be depricated with airflow
-    csvs = csv_locs(date)
+    csvs = csv_locs(local['sched_date'])
 
     # delete the working gdb if it has already been run this week
-    clearDataStore(local.AutomationExports, date)
+    clearDataStore(local['Automation_Exports'], local['sched_date'])
 
     # add headers to dba csv exports
-    csv_dir = add_columns(local.Sql_Exports, csvs, f'{date}')
+    csv_dir = add_columns(local['Sql_Exports'], csvs, local['sched_date'])
 
     # define config object
     config = config_options(csvs, csv_dir, local)
 
     # run the model with all of the specified variable objects and profiles
+
+    # function that finishes by updating the current gdb
+    def createLocalFiles(config, csvs):
+        # itterate through csvs to only run processes that have been updated
+        for file in csvs:
+            if file['type'] == 'stopsbyline':
+                stopsCreation(config)
+            elif file['file'] == 'patterns':
+                routesCreation(config)
+                routeBuffers(config)
+                adaCreation(config)
+            elif file['file'] == 'eamstops':
+                eamStopCreation(config)
+            elif file['file'] == 'ghoststops':
+                ghosttopsCreation(config)
+
+        update_current(config)
+
+
+
     createLocalFiles(config)
     updatePortalLayers(agol_config)
     updatePortalLayers(enterprise_config)
 
-
-
-# run()
-
-# print(os.environ['SQL_EXPORTS'])
-print(os.environ['SQL_EXPORTS'])
-print(os.path.dirname(__file__))
-
-
-
+run()
 
 # DEFAULT DIRECTORIES
 

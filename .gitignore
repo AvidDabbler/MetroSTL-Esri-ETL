@@ -10,5 +10,6 @@ ESRI Automation Script Documentation.docx
 MetaData.docx
 debug.log
 .env
-/__pycache__
-/.idea
+__pycache__
+.idea
+gis_lib/__pycache__
