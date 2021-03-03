@@ -2,7 +2,7 @@ import os
 import arcpy as ap
 import glob
 
-from .gis_lib.helpers import current_sign
+from gis_lib import *
 
 
 # TODO: specify portal ids for feature classes

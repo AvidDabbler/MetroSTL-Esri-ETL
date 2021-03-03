@@ -4,25 +4,28 @@ import arcpy as ap
 from arcgis.gis import GIS
 
 ##### CONFIG #####
-from .config import local_config, portal_config, config_options
+from config import local_config, portal_config, config_options
 
 ##### HELPERS #####
-from .gis_lib.helpers import * 
+from gis_lib.helpers import * 
 
 ##### LOCAL #####
-from .gis_lib.routes import routesCreation, routeBuffers
-from .gis_lib.stops import stopsCreation, ghosttopsCreation
-from .gis_lib.eam import eamStopCreation
-from .gis_lib.ada import adaCreation
-from .gis_lib.local import csv_locs, add_columns, update_current
-from .gis_lib.portal import updatePortalLayers
+from gis_lib.routes import routesCreation, routeBuffers
+from gis_lib.stops import stopsCreation, ghosttopsCreation
+from gis_lib.eam import eamStopCreation
+from gis_lib.ada import adaCreation
+from gis_lib.local import csv_locs, add_columns, update_current
+from gis_lib.portal import updatePortalLayers
 
 ##### DATA #####
-from .features import features 
+from features import features 
+ 
 
 # TODO: add in portal ids for feature classes on each portal and cut out project specific bloat
 
 def run():
+    # GET THE LOCAL PROJECT ENV VARIABLES
+    get_env()
     # Function chaining all of the processing of feature classes into one 
     # function that finishes by updating the current gdb
     def createLocalFiles(config):
@@ -35,7 +38,7 @@ def run():
         update_current(config)
 
     #  change cwd
-    os.chdir(os.getenv('SQL_EXPORTS'))
+    # os.chdir(os.getenv('SQL_EXPORTS'))
 
     # turn local variables into object
     local = local_config()
@@ -67,6 +70,12 @@ def run():
     updatePortalLayers(enterprise_config)
 
 
+
+# run()
+
+# print(os.environ['SQL_EXPORTS'])
+print(os.environ['SQL_EXPORTS'])
+print(os.path.dirname(__file__))
 
 
 

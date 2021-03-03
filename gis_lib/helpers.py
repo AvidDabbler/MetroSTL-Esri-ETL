@@ -4,6 +4,13 @@ import shutil
 import glob
 import shutil
 import csv
+from dotenv import load_dotenv
+
+
+def get_env():
+    dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+    load_dotenv(dotenv_path)
+
 
 
 def date(text):
