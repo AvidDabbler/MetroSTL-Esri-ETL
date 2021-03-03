@@ -1,7 +1,6 @@
 import os
 import arcpy as ap
 
-
 def adaCreation(config):
     sign = config.sign
     date = config.date

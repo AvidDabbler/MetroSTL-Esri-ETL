@@ -21,42 +21,40 @@ from .gis_lib.portal import updatePortalLayers
 from .features import features 
 
 
+def run():
+    def createLocalFiles(config):
+        routesCreation(config)
+        routeBuffers(config)
+        stopsCreation(config)
+        eamStopCreation(config)
+        ghosttopsCreation(config)
+        adaCreation(config)
+        update_current(config)
 
-def createLocalFiles(config):
-    routesCreation(config)
-    routeBuffers(config)
-    stopsCreation(config)
-    eamStopCreation(config)
-    ghosttopsCreation(config)
-    adaCreation(config)
-    update_current(config)
+    # admin functions
+    # DEFINE FEATURES AN FIELD FOR EACH PORTAL
 
+    os.chdir(os.getenv('SQL_EXPORTS'))
 
+    local = local_config()
 
-# admin functions
-# DEFINE FEATURES AN FIELD FOR EACH PORTAL
+    ap.env.workspace = os.path.join(local.AutomationExports, local.ds_gdb)
+    feature_classes = features(local.sched_date)
 
-os.chdir(os.getenv('SQL_EXPORTS'))
+    agol_config = portal_config(feature_classes, 'agol')
+    enterprise_config = portal_config(feature_classes, 'enterprise')
+    csvs = csv_locs(date)
 
-local = local_config()
+    clearDataStore(local.AutomationExports, date)
 
-ap.env.workspace = os.path.join(local.AutomationExports, local.ds_gdb)
-feature_classes = features(local.sched_date)
+    # add headers to dba csv exports
+    csv_dir = add_columns(local.Sql_Exports, csvs, f'{date}')
 
-agol_config = portal_config(feature_classes, 'agol')
-enterprise_config = portal_config(feature_classes, 'enterprise')
-csvs = csv_locs(date)
+    config = config_options(csvs, csv_dir, local)
 
-clearDataStore(local.AutomationExports, date)
-
-# add headers to dba csv exports
-csv_dir = add_columns(local.Sql_Exports, csvs, f'{date}')
-
-config = config_options(csvs, csv_dir, local)
-
-createLocalFiles(config)
-updatePortalLayers(agol_config)
-updatePortalLayers(enterprise_config)
+    createLocalFiles(config)
+    updatePortalLayers(agol_config)
+    updatePortalLayers(enterprise_config)
 
 
 
