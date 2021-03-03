@@ -14,7 +14,7 @@ def date(text):
     print(f'{text[:-1]} Date: {date}')
     return date
 
-def currentSign(stops_input_loc):
+def current_sign(stops_input_loc):
     with open(stops_input_loc, 'r') as file:
         reader = csv.reader(file)  # pass the file to our csv reader
         i = next(reader)  # second row (first row of data)
