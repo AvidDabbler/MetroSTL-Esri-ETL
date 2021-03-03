@@ -2,6 +2,8 @@ import os
 import arcpy as ap
 from arcgis.gis import GIS
 
+# TODO: Refactor by cutting out project variables and specifically define portal item id's
+
 def updatePortalLayers(portal):
     # def updateWebLayers(fc_list, user, password, url, project, enterprise=False):
     # Original source:

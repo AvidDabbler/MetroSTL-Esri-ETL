@@ -4,6 +4,9 @@ import glob
 
 from .gis_lib.helpers import current_sign
 
+
+# TODO: specify portal ids for feature classes
+
 def local_config():
     
     def local_date(text):
