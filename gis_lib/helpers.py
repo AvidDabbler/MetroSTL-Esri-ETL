@@ -141,3 +141,14 @@ def checkforfield(fc, field, type):
 
 def clearDataStore(dir, date):
     replaceGDB(dir, f"DataStore_{date}.gdb")
+
+def printList(list, key=None):
+    print(" ")
+    print("----------------------------")
+    print("creating csv's")
+    if key is None:
+        for item in list:
+            print(f'  - {item}')
+    else:
+        for item in list:
+            print(f'  - {item[key]}')

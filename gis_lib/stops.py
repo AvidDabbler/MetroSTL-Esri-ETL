@@ -8,22 +8,22 @@ from .helpers import *
 def stopsCreation(config):
     ap.env.overwriteOutput = True
 
-    date = config.date
-    sign = config.sign
-    acs_year = config.acs_year
-    title_vi_gdb = config.title_vi_gdb
+    date = config['date']
+    sign = config['sign']
+    acs_year = config['acs_year']
+    title_vi_gdb = config['title_vi_gdb']
 
-    csv_dir = config.processed_dir
-    ds_gdb = config.ds_gdb
-    cf_gdb = config.cf_gdb
+    csv_dir = config['processed_dir']
+    ds_gdb = config['ds_gdb']
+    cf_gdb = config['cf_gdb']
     
     # CSV TABLES
-    stops_name = config.files.stops
-    stopsbyline_name = config.files.stopsbyline
+    stops_name = config['files']['stops']
+    stopsbyline_name = config['files']['stops_by_line']
 
     # FEATURE CLASS NAMES
-    stops_output = config.feat_classes.stops
-    stopsbyline_output = config.feat_classes.stopsbyline
+    stops_output = config['files']['feat_classes']['stops']
+    stopsbyline_output = config['files']['feat_classes']['stops_by_line']
 
 
     # CSV LOCATIONS    
@@ -72,18 +72,18 @@ def stopsCreation(config):
 def ghosttopsCreation(config):
     ap.env.overwriteOutput = True
 
-    date = config.date
-    sign = config.sign
+    date = config['date']
+    sign = config['sign']
     
-    csv_dir = config.processed_dir
-    ds_gdb = config.ds_gdb
-    cf_gdb = config.cf_gdb
+    csv_dir = config['processed_dir']
+    ds_gdb = config['ds_gdb']
+    cf_gdb = config['cf_gdb']
     
     # CSV TABLES
-    ghoststops_name = config.files.ghoststops
+    ghoststops_name = config['files']['ghoststops']
 
     # FEATURE CLASS NAMES
-    ghoststops_output = config.feat_classes.ghoststops
+    ghoststops_output = config['files']['feat_classes']['ghoststops']
 
     # CSV LOCATIONS    
     ghoststops_table = os.path.join(csv_dir, f'{ghoststops_name}.csv')

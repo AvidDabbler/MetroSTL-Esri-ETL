@@ -60,7 +60,7 @@ def portal_config(fc_list, portal):
     return profile
 
 def config_options(files, csv_dir, local):
-    ap.env.workspace = os.path.join(local.Automation_Exports, local.ds_gdb)
+    ap.env.workspace = os.path.join(local['Automation_Exports'], local['ds_gdb'])
     # csvs, csv_dir, local.sign, local.sched_date, local.ACS_Year, local.ds_gdb, local.cf_gdb
     sign = local['sign']
     date = local['sched_date']
@@ -81,7 +81,7 @@ def config_options(files, csv_dir, local):
         "ds_gdb": ds_gdb, 
         "cf_gdb": cf_gdb,
         "files": {
-            "ada": f'ADA-ROUTES-LIST',
+            "ada": f'ADA_ROUTES{date}',
             "ghoststops": f'METROBUS-GHOSTSTOPS{date}',
             "patterns": {
                 "xy": f'METRO_PATTERNS_XY_{date}',
@@ -96,6 +96,7 @@ def config_options(files, csv_dir, local):
                 "route_buffer": "MetroBusRouteBuffer_",
                 "routes_dir": f'MetroBusRoutes_dir_{sign}_{date}',
                 "stops": f'MetroBusStops_{sign}_{date}',
+                "stops_by_line": f'MetroBusStopsByLine_{sign}_{date}',
                 "sys_buffer": "MetroBusSystemBuffer_",
             },
             "registered": {
@@ -108,18 +109,18 @@ def config_options(files, csv_dir, local):
                 "lightrail_buffer": "Lightrail_buffer"
             },
             "updateList":[
-                "MetroBusRoutes",
-                "MetroBusStops",
-                "MetroBusGhostStops",
-                "MetroBusStopsByLine",
-                "MetroBusRouteBuffer_05",
-                "MetroBusRouteBuffer_025",
-                "MetroBusRouteBuffer_075",
-                "MetroBusSystemBuffer_05",
-                "MetroBusSystemBuffer_025",
-                "MetroBusSystemBuffer_075",
-                "MetroBusRoutes_dir",
-                "MetroADAServiceArea"
+                "MetroBusRoutes_REGISTERED",
+                "MetroBusStops_REGISTERED",
+                "MetroBusGhostStops_REGISTERED",
+                "MetroBusStopsByLine_REGISTERED",
+                "MetroBusRouteBuffer_05_REGISTERED",
+                "MetroBusRouteBuffer_025_REGISTERED",
+                "MetroBusRouteBuffer_075_REGISTERED",
+                "MetroBusSystemBuffer_05_REGISTERED",
+                "MetroBusSystemBuffer_025_REGISTERED",
+                "MetroBusSystemBuffer_075_REGISTERED",
+                "MetroBusRoutes_dir_REGISTERED",
+                "MetroADAServiceArea_REGISTERED"
             ]
         }
     }

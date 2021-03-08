@@ -13,14 +13,15 @@ def routesCreation(config):
     ds_gdb = config['ds_gdb']
     
     # CSV TABLES
-    patterns_xy = config['files']['patterns'].xy
-    patterns_name = config['files']['patterns'].name
-    patterns_line = config['files']['patterns'].line
-    ada_table = config['files']['ada']
+    patterns_xy = config['files']['patterns']['xy']
+    patterns_name = config['files']['patterns']['name']
+    patterns_line = config['files']['patterns']['line']
+    ada_table = config["files"]["ada"]
 
     # FEATURE CLASS NAMES
     routes_dir_line = config['files']['feat_classes']['routes_dir']
     routes_line = config['files']['feat_classes']['routes']
+    ada_table_loc = os.path.join(csv_dir, f'{ada_table}.csv')
 
     # CSV LOCATIONS
     patterns_line_loc = os.path.join(ds_gdb, patterns_line)
@@ -58,13 +59,13 @@ def routesCreation(config):
 
     # START OF ADDING ADA INFORMATION
     ap.AddField_management(patterns_line_loc, "ADA", "SHORT")
-    ap.JoinField_management(patterns_line_loc, 'PubNum', ada_table, 'ADAAbbr', ['ADAAbbr'])
+    ap.JoinField_management(patterns_line_loc, 'PubNum', ada_table_loc, 'ADAAbbr', ['ADAAbbr'])
 
     # COMPARE ROUTE_ABBR IN ADA ROUTES AND PATTERNS_LINE_LOC
-    fields = ap.ListFields(patterns_line_loc)
-    for field in fields:
-        print(field.name)
-        print(field.type)
+    # fields = ap.ListFields(patterns_line_loc)
+    # for field in fields:
+    #     print(field.name)
+    #     print(field.type)
 
     adaCalc = """def ada(adaRoute):
         if adaRoute is None:
@@ -113,8 +114,8 @@ def routeBuffers(config):
     # FEATURE CLASS NAMES
     routes_dir_line = config['files']['feat_classes']['routes_dir']
     routes_line = config['files']['feat_classes']['routes']
-    route_buffer = config['feat_classes']['route_buffer']
-    sys_buffer = config['feat_classes']['sys_buffer']
+    route_buffer = config['files']['feat_classes']['route_buffer']
+    sys_buffer = config['files']['feat_classes']['sys_buffer']
 
     # MetroBusRoutes_Buffer and MetroBusSystem_Buffer
     buffer_list = [{'dist': '0.75 miles', 'name': '075'},

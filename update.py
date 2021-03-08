@@ -103,7 +103,7 @@ routes_loc = os.path.join(ds_gdb, routes_line)
 routes_csv = f'Routes_{pattern_file_date}.csv'
 routes_csv_loc = os.path.join(AutomationExports, f'exports\{routes_csv}')
 
-ada_csv_loc = os.path.join(AutomationExports, f"ADA-ROUTES-LIST.csv") #
+ada_csv_loc = os.path.join(AutomationExports, f"ADA-ROUTES.csv") #
 # PATTERN VARIABLES
 ada_name = f'ADA-ROUTES-LIST'
 ada_csv_loc = os.path.join(sql_exports, f"{ada_name}.csv")
