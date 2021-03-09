@@ -9,7 +9,7 @@ def adaCreation(config):
     date = config['date']
     cf_gdb = config['cf_gdb']
     ds_gdb = config['ds_gdb']
-    lightrail_buffer = config['registered']['lightrail_buffer']
+    lightrail_buffer = config['files']['registered']['lightrail_buffer']
 
     print('start of ada creation')
     # sign = s

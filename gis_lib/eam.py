@@ -12,11 +12,11 @@ def eamStopCreation(config):
 
     cf_gdb = config['cf_gdb'] 
     # FEATURE CLASS NAMES
-    bus_stops = config['registered']['stops']
-    eam_stops = config['registered']['eam_stops']
-    eam_stops_1000 = config['registered']['eam_stops_1000']
-    grid1000 = config['registered']['grid1000']
-    grid10000 = config['registered']['grid10000']
+    bus_stops = config['files']['registered']['stops']
+    eam_stops = config['files']['registered']['eam_stops']
+    eam_stops_1000 = config['files']['registered']['eam_stops_1000']
+    grid1000 = config['files']['registered']['grid1000']
+    grid10000 = config['files']['registered']['grid10000']
 
     deleteFeatureClass('EAMMetroBusStops_REGISTERED', 'A:\Open Data Admin\AutomationExports\CurrentFiles.gdb')
     deleteFeatureClass('EAMMetroBusStops_1000', 'A:\Open Data Admin\AutomationExports\CurrentFiles.gdb')
