@@ -52,7 +52,7 @@ def run():
     printList(csvs, "org_csv")
 
     # delete the working gdb if it has already been run this week
-    clearDataStore(local['Automation_Exports'], local['sched_date'])
+    # clearDataStore(local['Automation_Exports'], local['sched_date'])
 
     # add headers to dba csv exports
     csv_dir = add_columns(local['Sql_Exports'], csvs, local['sched_date'])
@@ -70,23 +70,23 @@ def run():
         print('-------------------------------------')
         print(' ')
         # itterate through csvs to only run processes that have been updated
-        for file in csvs:
-            if file['type'] == 'stopsbyline':
-                stopsCreation(config)
-            elif file['type'] == 'patterns':
-                routesCreation(config)
-                routeBuffers(config)
-                adaCreation(config)
-            elif file['type'] == 'eamstops':
-                eamStopCreation(config)
-            elif file['type'] == 'ghoststops':
-                ghosttopsCreation(config)
+        # for file in csvs:
+        #     if file['type'] == 'stopsbyline':
+        #         stopsCreation(config)
+        #     elif file['type'] == 'patterns':
+        #         routesCreation(config)
+        #         routeBuffers(config)
+        #         adaCreation(config)
+        #     elif file['type'] == 'eamstops':
+        #         eamStopCreation(config)
+        #     elif file['type'] == 'ghoststops':
+        #         ghosttopsCreation(config)
 
         update_current(config)
 
-    createLocalFiles(config, csvs)
-    # updatePortalLayers(agol_config)
-    # updatePortalLayers(enterprise_config)
+    # createLocalFiles(config, csvs)
+    updatePortalLayers(agol_config)
+    updatePortalLayers(enterprise_config)
 
 run()
 

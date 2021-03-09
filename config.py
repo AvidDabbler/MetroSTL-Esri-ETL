@@ -82,7 +82,7 @@ def config_options(files, csv_dir, local):
         "cf_gdb": cf_gdb,
         "files": {
             "ada": f'ADA_ROUTES{date}',
-            "ghoststops": f'METROBUS-GHOSTSTOPS{date}',
+            "ghoststops": f'GHOST-STOPS-EXTRACTION{date}',
             "patterns": {
                 "xy": f'METRO_PATTERNS_XY_{date}',
                 "name": f'METRO_PATTERNS{date}',

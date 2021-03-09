@@ -22,7 +22,7 @@ def updatePortalLayers(portal):
     # THE FOLLOWING LIST IS THE EXISTING FILES THAT ARE CURRENTLY HOSTED VIA AGOL AND IF YOU ARE GOING TO UPDATE THE
     # THE LIST OF FILES TO ADD MORE YOU NEED TO CREATE A NEW MAP WITH A CORRESPONDING FILE IN AUTOMATEDEXPORTS/CURRENTFILE.GDB
 
-    url = portal['url']
+    url = portal['portal']
     project = portal['project']
     password = portal['password']
     user = portal['user']

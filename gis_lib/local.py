@@ -61,15 +61,15 @@ def update_current(config):
     
     ap.env.overwriteOutput = True
 
-    for item in config['updateList']:
+    for item in config['files']['updateList']:
         print('********************************************************************************************************')
         print(f'Start of {item} creation in CurrentFiles.gdb')
         print('********************************************************************************************************')
         try:
-            working = os.path.join(config['ds_gdb'], f"{item.split('_REGISTERED')[0]}_{config['sign']}_{config['pattern_file_date']}")
+            working = os.path.join(config['ds_gdb'], f"{item.split('_REGISTERED')[0]}_{config['sign']}_{config['date']}")
             # deleteFeatureClass(os.path.join(config.cf_gdb, f"{item}_REGISTERED"), config.cf_gdb)
             ap.FeatureClassToFeatureClass_conversion(working, config['cf_gdb'], f"{item}")
             print(f'{item} replaced in CurrentFile.gdb')
             print(' ')
         except:
-            print(f"{item.split('_REGISTERED')[0]}_{config['sign']}_{config['pattern_file_date']} does not exist")
+            print(f"{item.split('_REGISTERED')[0]}_{config['sign']}_{config['date']} does not exist")
