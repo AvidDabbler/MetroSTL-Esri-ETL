@@ -81,12 +81,12 @@ def run():
         #         eamStopCreation(config)
         #     elif file['type'] == 'ghoststops':
         #         ghosttopsCreation(config)
+        eamStopCreation(config)
+        # update_current(config)
 
-        update_current(config)
-
-    # createLocalFiles(config, csvs)
-    updatePortalLayers(agol_config)
-    updatePortalLayers(enterprise_config)
+    createLocalFiles(config, csvs)
+    # updatePortalLayers(agol_config)
+    # updatePortalLayers(enterprise_config)
 
 run()
 

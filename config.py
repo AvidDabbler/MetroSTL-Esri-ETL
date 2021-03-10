@@ -91,6 +91,8 @@ def config_options(files, csv_dir, local):
             "stops": f'METROBUS-STOP-EXTRACTION{date}',
             "stops_by_line": f'METROBUS-STOPBYLINE_EXTRACTION-WITH-DISTANCE{date}',
             "feat_classes":{
+                "eam_stops": f"EAMMetroBusStops_{sign}_{date}",
+                "eam_stops_1000": f"EAMMetroBusStops_1000_{sign}_{date}",
                 "ghoststops": f'MetroBusGhostStops_{sign}_{date}',
                 "routes": f'MetroBusRoutes_{sign}_{date}',
                 "route_buffer": "MetroBusRouteBuffer_",
@@ -106,6 +108,7 @@ def config_options(files, csv_dir, local):
                 "grid1000": "MGRS_Grid_1000",
                 "grid10000": "MGRS_Grid_10000",
                 "eam_stops": "EAMMetroBusStops_REGISTERED",
+                "eam_stops": "EAMMetroBusStops_1000_REGISTERED",
                 "lightrail_buffer": "Lightrail_buffer"
             },
             "updateList":[
