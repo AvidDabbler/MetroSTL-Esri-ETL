@@ -56,6 +56,7 @@ def portal_config(fc_list, portal):
         }
     else:
         print(f"{portal} is not a valid portal")
+    profile["portal_type"] = portal
     profile["features"] = features
     return profile
 

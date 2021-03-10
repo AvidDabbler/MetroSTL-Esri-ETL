@@ -16,7 +16,7 @@ from gis_lib.stops import stopsCreation, ghosttopsCreation
 from gis_lib.eam import eamStopCreation
 from gis_lib.ada import adaCreation
 from gis_lib.local import csv_locs, add_columns, update_current
-from gis_lib.portal import updatePortalLayers
+from gis_lib.portal import updateItemsByID, updatePortalLayers
 
 ##### DATA #####
 from features import features 
@@ -81,10 +81,12 @@ def run():
         #         eamStopCreation(config)
         #     elif file['type'] == 'ghoststops':
         #         ghosttopsCreation(config)
-        eamStopCreation(config)
-        # update_current(config)
+        # eamStopCreation(config)
+        update_current(config)
 
     createLocalFiles(config, csvs)
+    updateItemsByID(enterprise_config, config)
+    updateItemsByID(agol_config, config)
     # updatePortalLayers(agol_config)
     # updatePortalLayers(enterprise_config)
 
