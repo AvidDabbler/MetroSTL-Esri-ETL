@@ -22,8 +22,6 @@ def updateItemsByID(portal, config):
         print(f'Updating:')
         print(feature['title'])
         
-        
-        
         item_id = feature[f'{portal_type}_id']
         feature_layer = gis.content.get(item_id)
         print(item_id)

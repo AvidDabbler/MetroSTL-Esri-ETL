@@ -124,6 +124,7 @@ def config_options(files, csv_dir, local):
                 "MetroBusSystemBuffer_025_REGISTERED",
                 "MetroBusSystemBuffer_075_REGISTERED",
                 "MetroBusRoutes_dir_REGISTERED",
+                "EAMMetroBusStops_REGISTERED",
                 "MetroADAServiceArea_REGISTERED"
             ]
         }
