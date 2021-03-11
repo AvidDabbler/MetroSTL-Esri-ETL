@@ -22,11 +22,6 @@ from gis_lib.portal import updateItemsByID
 from features import features 
  
 
-# TODO: add in portal ids for feature classes on each portal and cut out project specific bloat
-# TODO: update date to be that monday's date to avoid confusion
-# TODO: update_current needs to list the ones in the working dir and determine the matching 
-# feature that is is associated with and then update that
-
 def run():
     # GET THE LOCAL PROJECT ENV VARIABLES
     dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
@@ -52,7 +47,7 @@ def run():
     printList(csvs, "org_csv")
 
     # delete the working gdb if it has already been run this week
-    # clearDataStore(local['Automation_Exports'], local['sched_date'])
+    clearDataStore(local['Automation_Exports'], local['sched_date'])
 
     # add headers to dba csv exports
     csv_dir = add_columns(local['Sql_Exports'], csvs, local['sched_date'])
@@ -70,20 +65,20 @@ def run():
         print('-------------------------------------')
         print(' ')
         # itterate through csvs to only run processes that have been updated
-        # for file in csvs:
-        #     if file['type'] == 'stopsbyline':
-        #         stopsCreation(config)
-        #     elif file['type'] == 'patterns':
-        #         routesCreation(config)
-        #         routeBuffers(config)
-        #         adaCreation(config)
-        #     elif file['type'] == 'eamstops':
-        #         eamStopCreation(config)
-        # ISSUE WITH SCHEMA ON GHOSTSTOPS 
-        # (EXTRA FIELDS BEING EXPORTED BY DBA SCRIPT)
-        #     elif file['type'] == 'ghoststops':
-        #         ghosttopsCreation(config)
-        # eamStopCreation(config)
+        for file in csvs:
+            if file['type'] == 'stopsbyline':
+                stopsCreation(config)
+            elif file['type'] == 'patterns':
+                routesCreation(config)
+                routeBuffers(config)
+                adaCreation(config)
+            elif file['type'] == 'eamstops':
+                eamStopCreation(config)
+            # ISSUE WITH SCHEMA ON GHOSTSTOPS 
+            # (EXTRA FIELDS BEING EXPORTED BY DBA SCRIPT)
+            elif file['type'] == 'ghoststops':
+                ghosttopsCreation(config)
+        eamStopCreation(config)
         update_current(config)
 
     createLocalFiles(config, csvs)

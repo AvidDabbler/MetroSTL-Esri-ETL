@@ -41,6 +41,7 @@ def updateItemsByID(portal, config):
         
         
 # OLD WAY OF PUBLISHING WITH APRX
+# Keep around for republishing issue. Will be helpful for updating portal frontend attributes
 
 # def updatePortalLayers(portal):
 #     # def updateWebLayers(fc_list, user, password, url, project, enterprise=False):
