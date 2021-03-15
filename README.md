@@ -22,7 +22,7 @@ These files are broken out into specific groups to improve the ability of debugg
 ## Running the Script
 In order to run this script you will need to start up a local ArcGIS Python environment. It is recomended that you make a copy of the main ArcGIS Python environment using ArcPro and then activate the environment or run something like:
  
- `activate C:\Users\wkjenkins\AppData\Local\ESRI\conda\envs\arcgispro-py3-clone3`
+ `activate C:\Users\%USER%\AppData\Local\ESRI\conda\envs\arcgispro-py3-clone3`
  
  Other than the standard ArcPy environments that you need you will need a `dotenv` lib called [python-dotenv](https://pypi.org/project/python-dotenv/). Once you have your environment setup you will need to run in the terminal:
  
