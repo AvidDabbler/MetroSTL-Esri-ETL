@@ -4,7 +4,9 @@ import arcpy as ap
 # helpers
 from .helpers import * 
 
-
+# this function creates the stops in the weekly gdb 
+# it takes in the return of the config_options() to 
+# find files and construct naming conventions
 def stopsCreation(config):
     ap.env.overwriteOutput = True
 
@@ -30,11 +32,10 @@ def stopsCreation(config):
     stops_table = os.path.join(csv_dir, f'{stops_name}.csv')
     stopsbyline_table = os.path.join(csv_dir, f'{stopsbyline_name}.csv')
 
-    # deleteFeatureClass(stops_output, ds_gdb)
-    # deleteFeatureClass(stopsbyline_output, ds_gdb)
-
+    # turns stops csv to a geographic file
     ap.management.XYTableToPoint(stops_table, stops_output, 'GPS_Lon', 'GPS_Lat', '', ap.SpatialReference(4326))
     print('Stops Created')
+    # turns stops by line to a geographic file
     ap.management.XYTableToPoint(stopsbyline_table, stopsbyline_output,'GPS_LON', 'GPS_LAT', '', ap.SpatialReference(4326))
     print('Stops By Line Created')
 
@@ -42,14 +43,10 @@ def stopsCreation(config):
 
     stops_state_county = os.path.join(ds_gdb, 'stopsStateCounty')
 
-    # deleteFeatureClass(stops_state_county, cf_gdb)
-
-
     # STOPS COUNTY SPATIAL JOIN
     ap.SpatialJoin_analysis(stops_output, county, stops_state_county)
 
     # STOPS COUNTY CALUCLATION
-
     ap.AddField_management(stops_output, "CountyName", "TEXT")
     ap.JoinField_management(stops_output, "StopID", stops_state_county, "StopID", ["GEOID", "NAME"])
     ap.CalculateField_management(stops_output, f"CountyCode", '!GEOID!', "PYTHON3")
@@ -59,7 +56,6 @@ def stopsCreation(config):
 
 
     # STOPS BY LINE COUNTY CALCULATIONS
-
     ap.AddField_management(stopsbyline_output, "CountyName", "TEXT")
     ap.JoinField_management(stopsbyline_output, "StopID", stops_state_county, "StopID", ["GEOID", "NAME"])
     ap.CalculateField_management(stopsbyline_output, f"CountyCode", '!GEOID!', "PYTHON3")
@@ -69,6 +65,8 @@ def stopsCreation(config):
 
     print("done")
 
+# creates ghoststops in the weekly datastore gdb uses the config_option() return 
+# object to fill in gaps in naming conventions and file locations
 def ghosttopsCreation(config):
     ap.env.overwriteOutput = True
 
@@ -88,21 +86,18 @@ def ghosttopsCreation(config):
     # CSV LOCATIONS    
     ghoststops_table = os.path.join(csv_dir, f'{ghoststops_name}.csv')
     
-    # deleteFeatureClass(file_name, ds_gdb)
+    # Turns csv file to geographical file
     ap.management.XYTableToPoint(ghoststops_table, ghoststops_output,'GPS_LON', 'GPS_LAT', '', ap.SpatialReference(4326))
     print('Stops By Line Created')
     county = os.path.join(cf_gdb, 'State_County')
     stops_state_county = os.path.join(ds_gdb, 'stopsStateCounty')
 
-    # deleteFeatureClass(stops_state_county, cf_gdb)
 
-
-    # STOPS COUNTY SPATIAL JOIN
+    # STOPS COUNTY SPATIAL JOIN 
     ap.SpatialJoin_analysis(ghoststops_output, county, stops_state_county)
 
 
     # STOPS COUNTY CALUCLATION
-
     ap.AddField_management(ghoststops_output, "CountyName", "TEXT")
     ap.JoinField_management(ghoststops_output, "StopID", stops_state_county, "StopID", ["GEOID", "NAME"])
     ap.CalculateField_management(ghoststops_output, f"CountyCode", '!GEOID!', "PYTHON3")

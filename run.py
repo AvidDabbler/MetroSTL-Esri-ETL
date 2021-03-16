@@ -27,11 +27,13 @@ def run():
     dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
     load_dotenv(dotenv_path)    # Function chaining all of the processing of feature classes into one 
     
-    #  change cwd
+    #  change Current Working directory for processing files
     os.chdir(os.environ['SQL_EXPORTS'])
 
-    # turn local variables into object
+    # turn local variables into object for processing later in function
     local = local_config()
+
+    
     ap.env.workspace = os.path.join(local['Automation_Exports'], local['ds_gdb'])
     
     # get feature class names by feeding in date

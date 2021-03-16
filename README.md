@@ -33,6 +33,16 @@ In order to run this script you will need to start up a local ArcGIS Python envi
 ## .env
 The .env file is something that is NOT updated when pushed to github. In the project there is a *template.env* that you could customize with the neccessary variables that allow you to connect the AGOL / Enterprise accounts as well as the local directories that you are using to store files. 
 
+### defined variables in .env
+- TITLE_VI_GDB=Full path location of the titlevi gdb
+- AUTOMATION_EXPORTS=full path location of the AutomationExport directory that houses the historical gdb's
+- SQL_EXPORTS=full path directory that has all of the csv's that are a part of the weekly exports from the dba's
+- AGOL_USER=agol user
+- AGOL_PASSWORD=agol password
+- ENTERP_USER=enterprise username
+- ENTERP_PASSWORD=enterprise password
+- ENTERP_PORTAL=https://maps.portal.org/arcgis/
+
 ## Config
 The config files are broken up into a couple of different funnctions and for the most part you don't need to change as they really only take the date in as a parameter.
 
@@ -56,6 +66,6 @@ The gis_lib directory is where all of the functions for transforming and publish
 
 
 
-**IMPORTANT NOTE ON PUBLISHIN**
+**IMPORTANT NOTE ON PUBLISHING**
 
 If you  end up having to republish or are having a hard time publishing a specific feature service. Make sure that the portal item id's match. 

@@ -3,7 +3,8 @@ import arcpy as ap
 
 from .helpers import deleteFolder, deleteFeatureClass
 
-
+# creates a boundary in the weekly data store that has the entirety of the ada boundary 
+# by using the ADA_LIST.csv and the ADA field flag in that table to find routes that need to be buffered
 def adaCreation(config):
     sign = config['sign']
     date = config['date']
@@ -12,7 +13,6 @@ def adaCreation(config):
     lightrail_buffer = config['files']['registered']['lightrail_buffer']
 
     print('start of ada creation')
-    # sign = s
     mb_sys_buffer = f'MetroBusRouteBuffer_075_{sign}_{date}'
     mb_sys_buffer_loc = os.path.join(ds_gdb, mb_sys_buffer)
 
@@ -26,6 +26,7 @@ def adaCreation(config):
 
     ap.env.overwriteOutput = True
 
+    # clear out the old data
     deleteFeatureClass(ada_service_area, ds_gdb)
     deleteFeatureClass(ada_system_merge, ds_gdb)
     deleteFeatureClass(ada_route_buffer, ds_gdb)

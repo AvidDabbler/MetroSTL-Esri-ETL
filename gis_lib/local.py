@@ -3,6 +3,7 @@ import arcpy as ap
 import csv
 from .helpers import deleteFolder
 
+# defines an object that takes the date in to specify csv file locations
 def csv_locs(date):
     csvs = [
         {'org_csv': f'METROBUS-STOPBYLINE_EXTRACTION-WITH-DISTANCE{date}.csv', 
@@ -23,12 +24,13 @@ def csv_locs(date):
         ]
        
     new_csvs = []
-
+    # checks to see if the file was exported by the DBA's
     for item in csvs:    
         if os.path.exists(os.path.join(os.environ['SQL_EXPORTS'], item['org_csv'])):
             new_csvs.append(item)
     return new_csvs
 
+# adds columns to csv files since dba csv's do not have column headers
 def add_columns(sql_exports, csvs, folder_name):
     # add in missing columns from
     deleteFolder(os.path.join(sql_exports, folder_name))
@@ -57,10 +59,9 @@ def add_columns(sql_exports, csvs, folder_name):
     # returns the full path of the new csv directory
     return {"org_dir": sql_exports, "processed_dir": os.path.join(sql_exports, folder_name)}
 
+# updates current gdb (..\automations_exports\\current.gdb)
 def update_current(config):
-    
     ap.env.overwriteOutput = True
-
     for item in config['files']['updateList']:
         print('********************************************************************************************************')
         print(f'Start of {item} creation in CurrentFiles.gdb')

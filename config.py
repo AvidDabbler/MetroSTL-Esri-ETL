@@ -4,11 +4,12 @@ import glob
 
 from gis_lib.helpers import * 
 
-
-# TODO: specify portal ids for feature classes
-
+# finds a date and creates local variables based on that date
 def local_config():
-    
+    # Function to find monday's date
+    # looks at current folder finds all 
+    # files with text and looks at suffix 
+    # to find the greatest number YYMMDD
     def local_date(text):
         for file in glob.glob(text):
             dates = []
@@ -17,21 +18,30 @@ def local_config():
         print(f'{text[:-1]} Date: {date}')
         return date
 
+    # RUNS LOCAL Date finds monday's date
     sched_date = local_date('METRO_PATTERNS*')
+
+    # gets AUTOMATION EXPORTS from .env file to get the Automation_Exports directory
+    # this is where all of the exports are stored after processing the csv's
+    # this is a catalog of all the historic weekly gdb's and the current gdb
     Automation_Exports = os.environ['AUTOMATION_EXPORTS']
+
+    # This is where the csv's are stored when the DBA's export every monday
     Sql_Exports = os.environ['SQL_Exports']
 
     return {
         "ACS_Year": os.environ['TITLE_VI_GDB'][-6:-4],
         "Automation_Exports": Automation_Exports,
-        "cf_gdb": os.path.join(Automation_Exports, "CurrentFiles.gdb"),
-        "ds_gdb": os.path.join(Automation_Exports, f"DataStore_{sched_date}.gdb"),
+        "cf_gdb": os.path.join(Automation_Exports, "CurrentFiles.gdb"), # automation_exports\\current.gdb
+        "ds_gdb": os.path.join(Automation_Exports, f"DataStore_{sched_date}.gdb"), # weekly datastore updates
         "sched_date": sched_date,
         "sign": current_sign(os.path.join(Sql_Exports, f'METROBUS-STOP-EXTRACTION{sched_date}.csv')),
         "Sql_Exports": Sql_Exports,
         "TitleVI": os.environ['TITLE_VI_GDB'],
     }
 
+# function that acts like a class and returns an object with the portal connection information
+# args are the full feature class list (features.py) and a string defining the portal type (agol or enterprise)
 def portal_config(fc_list, portal):
     features = []
 
@@ -40,6 +50,8 @@ def portal_config(fc_list, portal):
             features.append(fc)
             print(f"- {fc['title']}")
 
+    # pulls in data from .env to fill in the return object 
+    # depending on whether it is an agol or enterprise portal at the time of run
     if portal == 'agol':
         profile = {
             "portal": 'https://www.arcgis.com/',
@@ -54,15 +66,19 @@ def portal_config(fc_list, portal):
             "password": os.environ['ENTERP_PASSWORD'],
             "project": os.environ['ENTERP_PROJECT'],
         }
+    # returns if error
     else:
         print(f"{portal} is not a valid portal")
     profile["portal_type"] = portal
     profile["features"] = features
     return profile
 
+# returns a combination of config objects that have all of the information to run processing information
+# takes in csv_locs return object, the weekly csv directory from add_columns(), and the local_config() return object
 def config_options(files, csv_dir, local):
     ap.env.workspace = os.path.join(local['Automation_Exports'], local['ds_gdb'])
-    # csvs, csv_dir, local.sign, local.sched_date, local.ACS_Year, local.ds_gdb, local.cf_gdb
+
+    # destructures local object for easy usage in return function
     sign = local['sign']
     date = local['sched_date']
     acs_year = local['ACS_Year']

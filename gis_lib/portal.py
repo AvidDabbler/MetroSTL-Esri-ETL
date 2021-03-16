@@ -6,7 +6,9 @@ from arcgis.features import FeatureLayerCollection
 
 from .helpers import deleteFolder
      
-        
+# functions updates itemss using the return of the portal_config() and config_options()
+# function cycles through features.py return that has a list of each feature class 
+# information and the information that pertains to each portal
 def updateItemsByID(portal, config):
     url = portal['portal']
     user = portal['user']
@@ -16,8 +18,12 @@ def updateItemsByID(portal, config):
     
     cf_gdb = config['cf_gdb']
     
+    # connect to the specified portal
     gis = GIS(url, user, password)  # connect to what portal you are interested in publishing to using variables user and password
     
+    # cycles throug the list of features that are filted by portal
+    # controled by either agol or enterprise boolean field to determine 
+    # if it a part of the list see the portal_config() return object
     for feature in features:
         print(f'Updating:')
         print(feature['title'])
@@ -41,8 +47,9 @@ def updateItemsByID(portal, config):
         
         
 # OLD WAY OF PUBLISHING WITH APRX
-# !!!! Keep around for republishing issue. Will be helpful for updating portal frontend attributes
-
+# is not called by default but could be useful in the future
+# you would need to specify the aprx project that has a bunch 
+# of maps that have services that have previously been published 
 def updatePortalLayers(portal):
     # def updateWebLayers(fc_list, user, password, url, project, enterprise=False):
     # Original source:

@@ -5,7 +5,8 @@ import pandas as pd
 # helpers
 from .helpers import deleteFeatureClass
 
-
+# function to create the routes by dir and routes file in the weekely datastore gdb
+# this function takes in the return of the config_options() in the run.py file
 def routesCreation(config):
     ap.env.overwriteOutput = True
 
@@ -62,11 +63,6 @@ def routesCreation(config):
     ap.JoinField_management(patterns_line_loc, 'PubNum', ada_table_loc, 'ADAAbbr', ['ADAAbbr'])
 
     # COMPARE ROUTE_ABBR IN ADA ROUTES AND PATTERNS_LINE_LOC
-    # fields = ap.ListFields(patterns_line_loc)
-    # for field in fields:
-    #     print(field.name)
-    #     print(field.type)
-
     adaCalc = """def ada(adaRoute):
         if adaRoute is None:
             return 0
@@ -96,6 +92,8 @@ def routesCreation(config):
     # DELETE MetroPatterns_XY
     ap.Delete_management(patterns_xy)
 
+# creates the route and system buffers file in the weekly datastore gdb 
+# route buffers are just of the route system buffers are the dissolved verion of route buffers
 def routeBuffers(config):
     ap.env.overwriteOutput = True
 
@@ -123,6 +121,7 @@ def routeBuffers(config):
                    {'dist': '0.25 miles', 'name': '025'}]
 
     # BUFFERING 0.75, 0.5, 0.25 MILES
+    # has subsiquent for loops that run for each of the populations calcualtion as a part of titlevi
     for dist in buffer_list:
 
         # ROUTE BUFFER
@@ -142,7 +141,7 @@ def routeBuffers(config):
         patterns_pd.drop(['shape_lat', 'shape_lon', 'shape_pt_sequence'], axis=1)
         print('Unique Routes table created')
 
-        # SYSTEM BUFFER
+        # SYSTEM BUFFER (dissolves the route buffers)
         mb_sys_buffer = f'{sys_buffer}{dist["name"]}_{sign}_{date}'
         mb_sys_buffer_loc = os.path.join(ds_gdb, mb_sys_buffer)
 
@@ -156,6 +155,8 @@ def routeBuffers(config):
 
         # TITLE VI ANALYSIS FOR STANDARD FILES
         # ACS INPUT, TOTAL POPULATION FIELD, DENSITY POPULATION COUNT
+        # takes the data from the titlevi fields and calculates the population 
+        # density for specific groups in order to get the total population of each group
         acs_list = [{'file_name': f'Minority{acs_year}_Final', 'pop': 'TPop', 'field': f'ClipPop{dist["name"]}', 'calc': '(!TPop!/!SqMiles!)'},
                     {'file_name': f'Minority{acs_year}_Final', 'pop': 'TMinority', 'field': f'ClipMin{dist["name"]}', 'calc': '!MinorityDens!'},
                     {'file_name': f'LEP{acs_year}_Final', 'pop': 'TLEP', 'field': f'ClipLEP{dist["name"]}', 'calc': '!LEPDens!'},
@@ -177,9 +178,6 @@ def routeBuffers(config):
             print('-------------------------')
             print('')
 
-            # DELETE DUPLICATE ROUTE DIRECTION FILE
-            # deleteFeatureClass(acs_out, title_vi_gdb)
-
             ap.Clip_analysis(acs_in, mb_sys_buffer, acs_out)
             ap.AddFields_management(acs_out,
                                     [[acs['field'], 'DOUBLE'],
@@ -189,8 +187,9 @@ def routeBuffers(config):
                                                                [acs['field'], f'{acs["calc"]} * !ClipSqMiles!']])
             print(f'Calculated fields for {acs_out}')
 
-            # ap.JoinField_management(type, ,acs_out, )
+            # dissolve out file name
             acs_out_diss = f'{acs_out}_dissolve'
+
 
             ap.Dissolve_management(acs_out, acs_out_diss, '', [[acs['field'], 'SUM']])
             ap.AddField_management(acs_out_diss, 'type', 'TEXT')
