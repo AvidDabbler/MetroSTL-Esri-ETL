@@ -60,7 +60,9 @@ def routesCreation(config):
 
     # START OF ADDING ADA INFORMATION
     ap.AddField_management(patterns_line_loc, "ADA", "SHORT")
-    ap.JoinField_management(patterns_line_loc, 'PubNum', ada_table_loc, 'ADAAbbr', ['ADAAbbr'])
+    # add in ADAAbbr is the same as RouteAbbr but you cannot add in another field with the same name
+    # if it is not in the ada table that means that it is not an ada route
+    ap.JoinField_management(patterns_line_loc, 'RouteAbbr', ada_table_loc, 'ADAAbbr', ['ADAAbbr'])
 
     # COMPARE ROUTE_ABBR IN ADA ROUTES AND PATTERNS_LINE_LOC
     adaCalc = """def ada(adaRoute):
@@ -70,7 +72,7 @@ def routesCreation(config):
             return 1"""
 
     ap.CalculateField_management(patterns_line_loc, 'ADA', 'ada(!ADAAbbr!)', "PYTHON3", adaCalc)
-    # ap.DeleteField_management(patterns_line_loc, "ADAAbbr")
+    ap.DeleteField_management(patterns_line_loc, "ADAAbbr")
 
     # ROUTES BY DIRECTION CREATION
 
